@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Digital Sphère – Solutions Informatiques</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --navy: #0d1b2a;
+      --navy-mid: #1a2e45;
+      --blue: #1e5f8e;
+      --gold: #c8a951;
+      --gold-light: #e2c97e;
+      --cream: #f5f0e8;
+      --white: #ffffff;
+      --text: #2c3e50;
+      --text-light: #6b7c93;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      color: var(--text);
+      background: var(--cream);
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 20px 60px;
+      background: rgba(13, 27, 42, 0.97);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(200, 169, 81, 0.2);
+    }
+    .logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem; font-weight: 700;
+      color: var(--white);
+      letter-spacing: 0.02em;
+    }
+    .logo span { color: var(--gold); }
+    .nav-links { display: flex; gap: 36px; list-style: none; }
+    .nav-links a {
+      color: rgba(255,255,255,0.75);
+      text-decoration: none; font-size: 0.9rem; font-weight: 400;
+      letter-spacing: 0.05em; text-transform: uppercase;
+      transition: color 0.25s;
+    }
+    .nav-links a:hover { color: var(--gold); }
+    .nav-cta {
+      background: var(--gold); color: var(--navy);
+      padding: 10px 24px; border-radius: 2px;
+      font-size: 0.85rem; font-weight: 500; text-transform: uppercase;
+      letter-spacing: 0.08em; text-decoration: none;
+      transition: background 0.25s, transform 0.2s;
+    }
+    .nav-cta:hover { background: var(--gold-light); transform: translateY(-1px); }
+
+    /* ── HERO ── */
+    #hero {
+      min-height: 100vh;
+      background: var(--navy);
+      display: flex; align-items: center;
+      position: relative; overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 60% 60% at 80% 40%, rgba(30,95,142,0.35) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 50% at 10% 80%, rgba(200,169,81,0.12) 0%, transparent 60%);
+    }
+    .hero-grid {
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+    .hero-content {
+      position: relative; z-index: 2;
+      max-width: 1100px; margin: 0 auto; padding: 0 60px;
+      padding-top: 100px;
+    }
+    .hero-tag {
+      display: inline-block;
+      font-size: 0.78rem; font-weight: 500; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--gold);
+      border: 1px solid rgba(200,169,81,0.4);
+      padding: 6px 16px; border-radius: 2px; margin-bottom: 28px;
+      animation: fadeUp 0.8s ease both;
+    }
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.8rem, 5.5vw, 4.8rem);
+      font-weight: 700; line-height: 1.1;
+      color: var(--white); margin-bottom: 24px;
+      animation: fadeUp 0.8s 0.15s ease both;
+    }
+    h1 em { font-style: italic; color: var(--gold); }
+    .hero-sub {
+      font-size: 1.15rem; font-weight: 300; line-height: 1.75;
+      color: rgba(255,255,255,0.65); max-width: 560px;
+      margin-bottom: 44px;
+      animation: fadeUp 0.8s 0.3s ease both;
+    }
+    .hero-actions {
+      display: flex; gap: 16px; flex-wrap: wrap;
+      animation: fadeUp 0.8s 0.45s ease both;
+    }
+    .btn-primary {
+      background: var(--gold); color: var(--navy);
+      padding: 15px 36px; border-radius: 2px;
+      font-weight: 500; font-size: 0.95rem;
+      text-decoration: none; letter-spacing: 0.04em;
+      transition: background 0.25s, transform 0.2s, box-shadow 0.25s;
+    }
+    .btn-primary:hover {
+      background: var(--gold-light);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(200,169,81,0.3);
+    }
+    .btn-outline {
+      border: 1px solid rgba(255,255,255,0.3); color: var(--white);
+      padding: 15px 36px; border-radius: 2px;
+      font-weight: 400; font-size: 0.95rem;
+      text-decoration: none; letter-spacing: 0.04em;
+      transition: border-color 0.25s, background 0.25s;
+    }
+    .btn-outline:hover { border-color: var(--gold); background: rgba(200,169,81,0.08); }
+
+    .hero-stats {
+      position: absolute; right: 60px; bottom: 80px;
+      display: flex; gap: 48px;
+      animation: fadeUp 0.8s 0.6s ease both;
+    }
+    .stat { text-align: right; }
+    .stat-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.6rem; font-weight: 700;
+      color: var(--white); line-height: 1;
+    }
+    .stat-num span { color: var(--gold); }
+    .stat-label {
+      font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase;
+      color: rgba(255,255,255,0.45); margin-top: 4px;
+    }
+
+    /* ── SECTION COMMON ── */
+    section { padding: 100px 60px; max-width: 1100px; margin: 0 auto; }
+    .section-tag {
+      font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--gold); font-weight: 500; margin-bottom: 14px;
+    }
+    h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 3.5vw, 3rem);
+      font-weight: 700; color: var(--navy); line-height: 1.15;
+      margin-bottom: 16px;
+    }
+    .section-intro {
+      font-size: 1.05rem; line-height: 1.8; color: var(--text-light);
+      max-width: 580px; margin-bottom: 64px;
+    }
+
+    /* ── SERVICES ── */
+    #services { background: var(--white); max-width: 100%; padding: 100px 0; }
+    #services .inner { max-width: 1100px; margin: 0 auto; padding: 0 60px; }
+    .services-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px;
+    }
+    .service-card {
+      background: var(--cream); padding: 48px 40px;
+      border-top: 3px solid transparent;
+      transition: border-color 0.3s, background 0.3s, transform 0.3s;
+      cursor: default;
+    }
+    .service-card:hover {
+      border-color: var(--gold); background: var(--white);
+      transform: translateY(-4px);
+    }
+    .service-icon {
+      width: 52px; height: 52px; margin-bottom: 28px;
+      background: var(--navy); border-radius: 4px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .service-icon svg { width: 24px; height: 24px; fill: var(--gold); }
+    .service-card h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.3rem; font-weight: 600;
+      color: var(--navy); margin-bottom: 14px;
+    }
+    .service-card p {
+      font-size: 0.95rem; line-height: 1.75; color: var(--text-light);
+    }
+
+    /* ── ABOUT ── */
+    #about { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+    .about-visual {
+      position: relative; height: 480px;
+    }
+    .about-box {
+      position: absolute; background: var(--navy);
+      border-radius: 2px; display: flex; align-items: center; justify-content: center;
+    }
+    .about-box-1 { inset: 0 60px 60px 0; }
+    .about-box-2 {
+      bottom: 0; right: 0; width: 200px; height: 200px;
+      background: var(--gold);
+    }
+    .about-box-2 p {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.5rem; font-weight: 700; color: var(--navy); text-align: center;
+    }
+    .about-box-2 span { display: block; font-family: 'DM Sans', sans-serif; font-size: 0.75rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; margin-top: 4px; }
+    .about-inner-text {
+      padding: 40px; color: rgba(255,255,255,0.5);
+      font-size: 0.85rem; text-align: center; line-height: 2;
+      letter-spacing: 0.08em; text-transform: uppercase;
+    }
+    .about-text h2 { margin-bottom: 20px; }
+    .about-text p { font-size: 1rem; line-height: 1.85; color: var(--text-light); margin-bottom: 20px; }
+    .about-text .highlight { color: var(--navy); font-weight: 500; }
+
+    /* ── PROCESS ── */
+    #process { background: var(--navy); max-width: 100%; padding: 100px 0; color: var(--white); }
+    #process .inner { max-width: 1100px; margin: 0 auto; padding: 0 60px; }
+    #process h2 { color: var(--white); }
+    #process .section-intro { color: rgba(255,255,255,0.5); }
+    .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; margin-top: 60px; }
+    .step {
+      background: rgba(255,255,255,0.04); padding: 40px 32px;
+      border-top: 2px solid rgba(200,169,81,0.3);
+      transition: border-color 0.3s, background 0.3s;
+    }
+    .step:hover { border-color: var(--gold); background: rgba(200,169,81,0.06); }
+    .step-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 3rem; font-weight: 700; color: rgba(200,169,81,0.25);
+      margin-bottom: 20px; line-height: 1;
+    }
+    .step h3 { font-size: 1.05rem; font-weight: 500; color: var(--white); margin-bottom: 12px; }
+    .step p { font-size: 0.9rem; line-height: 1.7; color: rgba(255,255,255,0.45); }
+
+    /* ── CONTACT ── */
+    #contact { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; }
+    .contact-info h2 { margin-bottom: 16px; }
+    .contact-info p { font-size: 1rem; line-height: 1.8; color: var(--text-light); margin-bottom: 40px; }
+    .contact-detail { display: flex; flex-direction: column; gap: 20px; }
+    .c-item { display: flex; align-items: center; gap: 16px; }
+    .c-icon {
+      width: 44px; height: 44px; background: var(--navy); border-radius: 2px;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .c-icon svg { width: 18px; height: 18px; fill: var(--gold); }
+    .c-text { font-size: 0.95rem; color: var(--text); font-weight: 400; }
+    .c-text span { display: block; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-light); margin-bottom: 2px; }
+
+    .contact-form { display: flex; flex-direction: column; gap: 20px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .form-group { display: flex; flex-direction: column; gap: 8px; }
+    label { font-size: 0.8rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--navy); }
+    input, textarea, select {
+      border: 1px solid rgba(13,27,42,0.15); border-radius: 2px;
+      padding: 12px 16px; font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem; color: var(--text);
+      background: var(--white); outline: none;
+      transition: border-color 0.25s, box-shadow 0.25s;
+    }
+    input:focus, textarea:focus, select:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(30,95,142,0.08);
+    }
+    textarea { resize: vertical; min-height: 130px; }
+    .btn-send {
+      background: var(--navy); color: var(--white);
+      padding: 15px 40px; border: none; border-radius: 2px;
+      font-family: 'DM Sans', sans-serif; font-size: 0.95rem;
+      font-weight: 500; letter-spacing: 0.06em; cursor: pointer;
+      transition: background 0.25s, transform 0.2s;
+      align-self: flex-start;
+    }
+    .btn-send:hover { background: var(--blue); transform: translateY(-2px); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--navy); color: rgba(255,255,255,0.4);
+      padding: 40px 60px; display: flex;
+      justify-content: space-between; align-items: center;
+      border-top: 1px solid rgba(200,169,81,0.15);
+    }
+    .footer-logo {
+      font-family: 'Playfair Display', serif; font-size: 1.2rem;
+      color: var(--white); font-weight: 600;
+    }
+    .footer-logo span { color: var(--gold); }
+    footer p { font-size: 0.82rem; }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    @media (max-width: 900px) {
+      nav { padding: 18px 24px; }
+      .nav-links { display: none; }
+      section, #services .inner, #process .inner { padding: 70px 24px; }
+      .hero-content { padding: 0 24px; padding-top: 100px; }
+      .hero-stats { right: 24px; gap: 28px; }
+      .stat-num { font-size: 1.8rem; }
+      .services-grid, .steps { grid-template-columns: 1fr; }
+      #about, #contact { grid-template-columns: 1fr; gap: 40px; }
+      .about-visual { display: none; }
+      footer { flex-direction: column; gap: 12px; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo"><span>&lt;/&gt;</span> Digital Sphere</div>
+  <ul class="nav-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#about">À propos</a></li>
+    <li><a href="#process">Processus</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="https://wa.me/22170745192" target="_blank" class="nav-cta">Devis gratuit</a>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="hero-tag">Besoin d'un Expert en Informatique ?</div>
+    <h1>L'expertise numérique<br/>au service de votre <em>succès</em></h1>
+    <p class="hero-sub">Digital Sphère vous accompagne pour tous vos besoins informatiques — particuliers et entreprises. Réparation, installation, dépannage et création de sites web à Thiès.</p>
+    <div class="hero-actions">
+      <a href="#services" class="btn-primary">Nos services</a>
+      <a href="https://wa.me/221707451952" target="_blank" class="btn-outline">Contactez-nous sur WhatsApp</a>
+    </div>
+  </div>
+  <div class="hero-stats">
+    <div class="stat">
+      <div class="stat-num">1<span>an</span></div>
+      <div class="stat-label">D'expérience</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">20</div>
+      <div class="stat-label">Projets livrés</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">98<span>%</span></div>
+      <div class="stat-label">Clients satisfaits</div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<div id="services">
+  <div class="inner">
+    <p class="section-tag reveal">Particulier & Entreprise</p>
+    <h2 class="reveal">Nos services<br/>informatiques</h2>
+    <p class="section-intro reveal">De la réparation à la création de site web, nous couvrons tous vos besoins informatiques avec des tarifs compétitifs et un service de proximité.</p>
+    <div class="services-grid">
+
+      <div class="service-card reveal">
+        <div class="service-icon">
+          <svg viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>
+        </div>
+        <h3>Réparation & Entretien</h3>
+        <p>Diagnostic et réparation de tous types de matériels informatiques. Entretien préventif pour garantir la durée de vie et les performances de vos équipements.</p>
+      </div>
+
+      <div class="service-card reveal">
+        <div class="service-icon">
+          <svg viewBox="0 0 24 24"><path d="M20 3H4a2 2 0 00-2 2v14a2 2 0 002 2h16a2 2 0 002-2V5a2 2 0 00-2-2zm0 16H4V9h16v10zm0-12H4V5h16v2z"/></svg>
+        </div>
+        <h3>Installation de Logiciels</h3>
+        <p>Installation et configuration de tous vos logiciels professionnels et personnels. Mise en place d'environnements de travail optimisés pour votre activité.</p>
+      </div>
+
+      <div class="service-card reveal">
+        <div class="service-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm-1-11v6h2v-6h-2zm0-4v2h2V7h-2z"/></svg>
+        </div>
+        <h3>Dépannage & Résolution</h3>
+        <p>Intervention rapide pour résoudre tous vos problèmes informatiques. Disponibilité en cas d'urgence pour minimiser l'impact sur votre activité.</p>
+      </div>
+
+      <div class="service-card reveal">
+        <div class="service-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <h3>Sécurisation des Systèmes</h3>
+        <p>Protection et optimisation de vos systèmes informatiques. Sécurisation de vos données et de votre réseau contre les menaces et les intrusions.</p>
+      </div>
+
+      <div class="service-card reveal">
+        <div class="service-icon">
+          <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        </div>
+        <h3>Conseils Personnalisés</h3>
+        <p>Accompagnement sur mesure pour particuliers et entreprises. Conseils adaptés à vos besoins et à votre budget pour faire les meilleurs choix technologiques.</p>
+      </div>
+
+      <div class="service-card reveal">
+        <div class="service-icon">
+          <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        </div>
+        <h3>Création de Site Web</h3>
+        <p>Conception et développement de sites web professionnels pour particuliers et entreprises. Des sites modernes, rapides et adaptés à votre image.</p>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="about-visual">
+    <div class="about-box about-box-1">
+      <div class="about-inner-text">
+        Infrastructure<br/>— Sécurité —<br/>Innovation<br/>— Performance —<br/>Fiabilité
+      </div>
+    </div>
+    <div class="about-box about-box-2">
+      <p>2025<span>Fondée à Thiès</span></p>
+    </div>
+  </div>
+  <div class="about-text reveal">
+    <p class="section-tag">Notre histoire</p>
+    <h2>Une entreprise bâtie sur la confiance</h2>
+    <p>Fondée en 2025, <span class="highlight">Digital Sphère</span> est née de la conviction que chaque client mérite un partenaire informatique à la hauteur de ses ambitions. Nous combinons expertise technique et service de proximité pour vous accompagner durablement.</p>
+    <p>Notre équipe s'engage à comprendre vos besoins avant de proposer des solutions adaptées. Nous intervenons aussi bien chez les particuliers que les entreprises avec des tarifs compétitifs et une disponibilité rapide en cas d'urgence.</p>
+    <p>Basés à Thiès au Sénégal, nous intervenons dans toute la région pour vous offrir un service clientèle de proximité et des solutions sur mesure.</p>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<div id="process">
+  <div class="inner">
+    <p class="section-tag reveal">Comment nous travaillons</p>
+    <h2 class="reveal">Un processus<br/>éprouvé</h2>
+    <p class="section-intro reveal">De l'analyse initiale à la livraison, chaque projet suit une méthodologie rigoureuse qui garantit qualité et respect des délais.</p>
+    <div class="steps">
+      <div class="step reveal">
+        <div class="step-num">01</div>
+        <h3>Analyse & Audit</h3>
+        <p>Nous étudions votre environnement existant, vos objectifs et vos contraintes pour poser des bases solides.</p>
+      </div>
+      <div class="step reveal">
+        <div class="step-num">02</div>
+        <h3>Conception</h3>
+        <p>Élaboration d'une architecture sur mesure et validation avec vos équipes avant toute mise en œuvre.</p>
+      </div>
+      <div class="step reveal">
+        <div class="step-num">03</div>
+        <h3>Réalisation</h3>
+        <p>Déploiement par nos ingénieurs avec suivi régulier et points d'avancement transparents.</p>
+      </div>
+      <div class="step reveal">
+        <div class="step-num">04</div>
+        <h3>Suivi & Évolution</h3>
+        <p>Accompagnement post-livraison, formation de vos équipes et amélioration continue de vos solutions.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-info reveal">
+    <p class="section-tag">Parlons de votre projet</p>
+    <h2>Prenons contact</h2>
+    <p>Que vous ayez un projet précis ou simplement besoin de conseils, notre équipe est à votre disposition. Réponse garantie sous 24h.</p>
+    <div class="contact-detail">
+      <div class="c-item">
+        <div class="c-icon">
+          <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.79 19.79 0 012.12 4.18 2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+        </div>
+        <div class="c-text"><span>Téléphone</span>+221 76 797 45 41 / 78 896 35 39</div>
+      </div>
+      <div class="c-item">
+        <div class="c-icon">
+          <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        </div>
+        <div class="c-text"><span>Email</span>bassirouniang25@icloud.com</div>
+      </div>
+      <div class="c-item">
+        <div class="c-icon">
+          <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        </div>
+        <div class="c-text"><span>Adresse</span>Grand Standing, Thiès, Sénégal</div>
+      </div>
+    </div>
+  </div>
+  <div class="contact-form reveal">
+    <div class="form-row">
+      <div class="form-group">
+        <label for="name">Nom</label>
+        <input type="text" id="name" placeholder="Jean Dupont"/>
+      </div>
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" placeholder="jean@entreprise.fr"/>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="company">Entreprise</label>
+      <input type="text" id="company" placeholder="Votre société"/>
+    </div>
+    <div class="form-group">
+      <label for="subject">Sujet</label>
+      <select id="subject">
+        <option>Infrastructure & Réseaux</option>
+        <option>Développement Logiciel</option>
+        <option>Cybersécurité</option>
+        <option>Cloud & Hébergement</option>
+        <option>Conseil & Audit IT</option>
+        <option>Support & Maintenance</option>
+        <option>Autre demande</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="message">Message</label>
+      <textarea id="message" placeholder="Décrivez votre projet ou votre besoin..."></textarea>
+    </div>
+    <button class="btn-send" onclick="handleSubmit()">Envoyer le message</button>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo"><span>&lt;/&gt;</span> Digital Sphere</div>
+  <p>© 2025 Digital Sphere. Tous droits réservés.</p>
+  <p>Thiès, Sénégal</p>
+</footer>
+
+<script>
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 80);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  reveals.forEach(el => observer.observe(el));
+
+  function handleSubmit() {
+    const btn = document.querySelector('.btn-send');
+    btn.textContent = '✓ Message envoyé !';
+    btn.style.background = '#1e8e5f';
+    setTimeout(() => {
+      btn.textContent = 'Envoyer le message';
+      btn.style.background = '';
+    }, 3000);
+  }
+</script>
+</body>
+</html>
