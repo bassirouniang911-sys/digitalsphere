@@ -347,7 +347,7 @@
     <p class="hero-sub">Digital Sphère vous accompagne pour tous vos besoins informatiques — particuliers et entreprises. Réparation, installation, dépannage et création de sites web à Thiès.</p>
     <div class="hero-actions">
       <a href="#services" class="btn-primary">Nos services</a>
-      <a href="https://wa.me/221707451952" target="_blank" class="btn-outline">Contactez-nous sur WhatsApp</a>
+      <a href="https://wa.me/22170745192" target="_blank" class="btn-outline">Contactez-nous sur WhatsApp</a>
     </div>
   </div>
   <div class="hero-stats">
@@ -561,13 +561,19 @@
   reveals.forEach(el => observer.observe(el));
 
   function handleSubmit() {
-    const btn = document.querySelector('.btn-send');
-    btn.textContent = '✓ Message envoyé !';
-    btn.style.background = '#1e8e5f';
-    setTimeout(() => {
-      btn.textContent = 'Envoyer le message';
-      btn.style.background = '';
-    }, 3000);
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+    const company = document.getElementById('company').value;
+    const subject = document.getElementById('subject').value;
+    const message = document.getElementById('message').value;
+
+    if (!name || !email || !message) {
+      alert('Veuillez remplir au moins votre nom, email et message.');
+      return;
+    }
+
+    const mailtoLink = `mailto:bassirouniang25@icloud.com?subject=Contact Digital Sphere - ${subject}&body=Nom: ${name}%0AEmail: ${email}%0AEntreprise: ${company}%0A%0AMessage:%0A${message}`;
+    window.location.href = mailtoLink;
   }
 </script>
 </body>
